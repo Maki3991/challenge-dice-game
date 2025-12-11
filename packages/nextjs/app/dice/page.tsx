@@ -46,11 +46,13 @@ const DiceGame: NextPage = () => {
       setIsRolling(false);
 
       setRolls(
-        rollsHistoryData?.map(({ args }) => ({
-          address: args.player as AddressType,
-          amount: Number(args.amount),
-          roll: (args.roll as bigint).toString(16).toUpperCase(),
-        })) || [],
+        rollsHistoryData
+          ?.filter(e => e && e.args)
+          .map(({ args }) => ({
+            address: args.player as AddressType,
+            amount: Number(args.amount),
+            roll: (args.roll as bigint).toString(16).toUpperCase(),
+          })) || [],
       );
     }
   }, [rolls, rollsHistoryData, rollsHistoryLoading]);
@@ -70,10 +72,12 @@ const DiceGame: NextPage = () => {
       setIsRolling(false);
 
       setWinners(
-        winnerHistoryData?.map(({ args }) => ({
-          address: args.winner as AddressType,
-          amount: args.amount as bigint,
-        })) || [],
+        winnerHistoryData
+          ?.filter(e => e && e.args)
+          .map(({ args }) => ({
+            address: args.winner as AddressType,
+            amount: args.amount as bigint,
+          })) || [],
       );
     }
   }, [winnerHistoryData, winnerHistoryLoading, winners.length]);
@@ -150,7 +154,7 @@ const DiceGame: NextPage = () => {
               <Amount amount={Number(riggedRollBalance?.formatted || 0)} showUsdPrice className="text-lg" />
             </div>
           </div>
-          {/* <button
+          <button
             onClick={async () => {
               if (!rolled) {
                 setRolled(true);
@@ -167,7 +171,7 @@ const DiceGame: NextPage = () => {
             className="mt-2 btn btn-secondary btn-xl normal-case font-xl text-lg"
           >
             Rigged Roll!
-          </button> */}
+          </button>
 
           <div className="flex mt-8">
             {rolled ? (
